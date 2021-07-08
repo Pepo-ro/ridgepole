@@ -2,11 +2,11 @@ class Ridgepole::DSLParser
   class TableDefinition
     attr_reader :__definition
 
-    def initialize(table_name, base, default_primary_key_type)
+    def initialize(table_name, default_primary_key_type, base)
       @__definition = {}
       @table_name = table_name
       @base = base
-      @default_primary_key_type = default_primary_key_type
+      @default_primary_key_type = default_primary_key_type.nil? ? :bigint : default_primary_key_type.to_sym
     end
 
     def column(name, type, options = {})
@@ -18,8 +18,8 @@ class Ridgepole::DSLParser
       }
     end
 
-    def self.default_primary_key_type
-      @default_primary_key_type.present? ? @default_primary_key_type.to_sym : :bigint
+    def self.default_primary_key_type(default_primary_key_type)
+      default_primary_key_type.nil? ? :bigint : default_primary_key_type.to_sym
     end
 
     TYPES = [
@@ -127,7 +127,7 @@ class Ridgepole::DSLParser
       options = args.extract_options!
       polymorphic = options.delete(:polymorphic)
       index_options = options.has_key?(:index) ? options.delete(:index) : true
-      type = options.delete(:type) || self.default_primary_key_type
+      type = options.delete(:type) || @default_primary_key_type
 
       args.each do |col|
         column("#{col}_id", type, options)

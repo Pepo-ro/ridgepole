@@ -5,7 +5,7 @@ class Ridgepole::DSLParser
 
   def parse(dsl, opts = {})
     context = Context.new(opts)
-    definition, execute = context.eval(dsl, opts)
+    definition, execute = context.eval(dsl)
     check_orphan_index(definition)
     check_orphan_foreign_key(definition)
     [definition, execute]

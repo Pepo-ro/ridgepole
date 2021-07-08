@@ -7,6 +7,7 @@ class Ridgepole::DSLParser
       @__working_dir = File.expand_path(opts[:path] ? File.dirname(opts[:path]) : Dir.pwd)
       @__definition = {}
       @__execute = []
+      @default_primary_key_type = opts[:default_primary_keY_type].present? ? opts[:default_primary_keY_type] : nil
     end
 
     def self.eval(dsl, opts = {})
@@ -23,7 +24,7 @@ class Ridgepole::DSLParser
 
     def create_table(table_name, options = {})
       table_name = table_name.to_s
-      table_definition = TableDefinition.new(table_name, self)
+      table_definition = TableDefinition.new(table_name, self, @default_primary_key_type)
 
       if options[:primary_key] and options[:primary_key].is_a?(Symbol)
         options[:primary_key] = options[:primary_key].to_s

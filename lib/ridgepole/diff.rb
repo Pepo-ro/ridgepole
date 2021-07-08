@@ -158,7 +158,7 @@ class Ridgepole::Diff
     if options[:id]
       type = options.delete(:id)
     else
-      type = Ridgepole::DSLParser::TableDefinition::DEFAULT_PRIMARY_KEY_TYPE
+      type = Ridgepole::DSLParser::TableDefinition.default_primary_key_type
     end
 
     if [:integer, :bigint].include?(type) && !options.key?(:default)

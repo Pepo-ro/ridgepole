@@ -30,6 +30,7 @@ describe 'ridgepole' do
             --default-string-limit LIMIT
             --default-text-limit LIMIT
             --default-binary-limit LIMIT
+            --default-primary-key-type
             --pre-query QUERY
             --post-query QUERY
         -e, --export

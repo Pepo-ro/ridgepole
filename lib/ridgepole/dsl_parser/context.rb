@@ -7,7 +7,7 @@ class Ridgepole::DSLParser
       @__working_dir = File.expand_path(opts[:path] ? File.dirname(opts[:path]) : Dir.pwd)
       @__definition = {}
       @__execute = []
-      @default_primary_key_type = opts[:default_primary_keY_type].present? ? opts[:default_primary_keY_type] : "bigint"
+      @default_primary_key_type = opts[:default_primary_key_type]
     end
 
     def eval(dsl, opts = {})

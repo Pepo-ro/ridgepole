@@ -2,10 +2,11 @@ class Ridgepole::DSLParser
   class TableDefinition
     attr_reader :__definition
 
-    def initialize(table_name, base)
+    def initialize(table_name, default_primary_key_type, base)
       @__definition = {}
       @table_name = table_name
       @base = base
+      @default_primary_key_type = default_primary_key_type.nil? ? :bigint : default_primary_key_type.to_sym
     end
 
     def column(name, type, options = {})
@@ -17,7 +18,9 @@ class Ridgepole::DSLParser
       }
     end
 
-    DEFAULT_PRIMARY_KEY_TYPE = Gem::Version.new(ActiveRecord::VERSION::STRING) >= Gem::Version.new('5.1') ? :bigint : :integer
+    def self.default_primary_key_type(default_primary_key_type)
+      default_primary_key_type.nil? ? :bigint : default_primary_key_type.to_sym
+    end
 
     TYPES = [
       # https://github.com/rails/rails/blob/v4.2.1/activerecord/lib/active_record/connection_adapters/abstract/schema_definitions.rb#L274
@@ -124,7 +127,7 @@ class Ridgepole::DSLParser
       options = args.extract_options!
       polymorphic = options.delete(:polymorphic)
       index_options = options.has_key?(:index) ? options.delete(:index) : true
-      type = options.delete(:type) || DEFAULT_PRIMARY_KEY_TYPE
+      type = options.delete(:type) || @default_primary_key_type
 
       args.each do |col|
         column("#{col}_id", type, options)

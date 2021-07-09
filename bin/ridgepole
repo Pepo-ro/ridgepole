@@ -94,6 +94,7 @@ ARGV.options do |opt|
       }
     end
 
+    opt.on('',   '--default-primary-key-type DEFULT_PRIMARY_KEY_TYPE')    {|v| options[:default_primary_key_type] = v }
     opt.on('',   '--pre-query QUERY')             {|v| options[:pre_query] = v                              }
     opt.on('',   '--post-query QUERY')            {|v| options[:post_query] = v                             }
     opt.on('-e', '--export')                      {    set_mode[:export]                                    }
@@ -229,7 +230,8 @@ begin
     logger.info(msg)
 
     dsl = File.read(file)
-    delta = client.diff(dsl, :path => file)
+    options[:path] = file
+    delta = client.diff(dsl, options)
     differ = delta.differ?
 
     if options[:dry_run]
